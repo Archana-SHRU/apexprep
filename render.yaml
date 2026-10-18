@@ -11,7 +11,7 @@ services:
     runtime: node
     plan: free
     rootDir: apexprep-backend
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm run db:migrate:prod && npm run start:prod
     healthCheckPath: /v1/health/live
     envVars:
