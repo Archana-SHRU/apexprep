@@ -75,7 +75,12 @@ async function main(): Promise<void> {
   const studentPassword = process.env.SEED_STUDENT_PASSWORD || 'StudentPassword123!';
 
   console.log(`Connecting to database...`);
-  const client = new Client({ connectionString: url, application_name: 'apexprep-remote-seed' });
+  const isCloud = !url.includes('localhost') && !url.includes('127.0.0.1');
+  const client = new Client({
+    connectionString: url,
+    application_name: 'apexprep-remote-seed',
+    ssl: isCloud ? { rejectUnauthorized: false } : undefined,
+  });
   await client.connect();
 
   try {

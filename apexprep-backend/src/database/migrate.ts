@@ -127,8 +127,11 @@ export async function runMigrations(
 async function main(): Promise<void> {
   loadEnvFile();
   const args = new Set(process.argv.slice(2));
-  const url = process.env.MIGRATE_DATABASE_URL ?? process.env.DATABASE_URL;
+  let url = process.env.MIGRATE_DATABASE_URL ?? process.env.DATABASE_URL;
   if (!url) throw new Error('DATABASE_URL (or MIGRATE_DATABASE_URL) is not set');
+  if (process.env.RENDER && !/[?&]sslmode=/.test(url)) {
+    url += (url.includes('?') ? '&' : '?') + 'sslmode=disable';
+  }
   if (args.has('--reset') && process.env.NODE_ENV === 'production') {
     throw new Error('--reset is refused when NODE_ENV=production');
   }

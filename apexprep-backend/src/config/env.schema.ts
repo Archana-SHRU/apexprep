@@ -223,20 +223,29 @@ export const envSchema = z
       // `sslmode=disable` is accepted, because a private network with TLS terminated elsewhere is a
       // real deployment — but it has to be written down.
       if (!/[?&]sslmode=/.test(env.DATABASE_URL)) {
-        issue(
-          'DATABASE_URL',
-          'production must state its TLS mode: append ?sslmode=verify-full (or sslmode=disable if TLS is terminated by the network). ' +
-            'verify-full rather than require, because pg-connection-string v3 will give `require` weaker libpq semantics.',
-        );
+        if (!process.env.RENDER) {
+          issue(
+            'DATABASE_URL',
+            'production must state its TLS mode: append ?sslmode=verify-full (or sslmode=disable if TLS is terminated by the network). ' +
+              'verify-full rather than require, because pg-connection-string v3 will give `require` weaker libpq semantics.',
+          );
+        }
       }
     }
   })
-  .transform(({ MAIL_TRANSPORT, ...env }) => ({
-    ...env,
-    CORS_ORIGINS: env.CORS_ORIGINS ?? DEV_CORS_ORIGINS,
-    MAIL_PROVIDER: env.MAIL_PROVIDER ?? MAIL_TRANSPORT ?? 'console',
-    FRONTEND_URL: (env.FRONTEND_URL ?? env.APP_PUBLIC_URL).replace(/\/+$/, ''),
-  }));
+  .transform(({ MAIL_TRANSPORT, ...env }) => {
+    let databaseUrl = env.DATABASE_URL;
+    if (process.env.RENDER && !/[?&]sslmode=/.test(databaseUrl)) {
+      databaseUrl += databaseUrl.includes('?') ? '&sslmode=disable' : '?sslmode=disable';
+    }
+    return {
+      ...env,
+      DATABASE_URL: databaseUrl,
+      CORS_ORIGINS: env.CORS_ORIGINS ?? DEV_CORS_ORIGINS,
+      MAIL_PROVIDER: env.MAIL_PROVIDER ?? MAIL_TRANSPORT ?? 'console',
+      FRONTEND_URL: (env.FRONTEND_URL ?? env.APP_PUBLIC_URL).replace(/\/+$/, ''),
+    };
+  });
 
 export type Env = z.infer<typeof envSchema>;
 

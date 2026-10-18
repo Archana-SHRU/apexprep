@@ -47,8 +47,8 @@ services:
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        sync: false
+        value: https://apexprep.vercel.app
       - key: FRONTEND_URL
-        sync: false
+        value: https://apexprep.vercel.app
       - key: APP_PUBLIC_URL
-        sync: false
+        value: https://apexprep.vercel.app
