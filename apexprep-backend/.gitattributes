@@ -1,0 +1,5 @@
+# Keep scripts and SQL with LF endings regardless of the checkout platform.
+* text=auto
+*.sh   text eol=lf
+*.sql  text eol=lf
+*.ts   text eol=lf

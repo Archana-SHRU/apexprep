@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-deck text-ink font-sans text-body-md antialiased;
+    font-feature-settings: 'tnum' 1, 'cv05' 1;
+  }
+  * { border-color: #E2E8F0; }
+  :focus-visible { outline: 2px solid #4361EE; outline-offset: 2px; }
+}
+
+@layer components {
+  .panel { @apply bg-canvas border border-line rounded; }
+  .hairline { @apply border-t border-line; }
+  .eyebrow { @apply font-mono text-label-sm uppercase text-ink-muted; }
+  .metric { @apply font-mono text-metric-lg text-ink; }
+  .scroll-x { @apply overflow-x-auto [scrollbar-width:thin]; }
+}
