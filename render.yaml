@@ -12,8 +12,7 @@ services:
     plan: free
     rootDir: apexprep-backend
     buildCommand: npm ci && npm run build
-    preDeployCommand: npm run db:migrate:prod
-    startCommand: npm run start:prod
+    startCommand: npm run db:migrate:prod && npm run start:prod
     healthCheckPath: /v1/health/live
     envVars:
       - key: NODE_ENV

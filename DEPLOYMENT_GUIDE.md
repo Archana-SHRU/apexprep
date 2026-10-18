@@ -34,7 +34,7 @@ This guide walks you through deploying the complete ApexPrep platform:
 
 1. **[render.yaml](file:///render.yaml)**: Complete Blueprint that automatically provisions:
    - `apexprep-db`: PostgreSQL 16 database.
-   - `apexprep-backend`: Node Web Service running NestJS with automated pre-deploy migrations (`npm run db:migrate:prod`) and health checks (`/v1/health/live`).
+   - `apexprep-backend`: Node Web Service running NestJS with automated startup database migrations (`npm run db:migrate:prod && npm run start:prod`) and health checks (`/v1/health/live`).
    - Internal secure database connection (`?sslmode=disable` automatically handled).
 2. **[vercel.json](file:///apexprep-frontend/vercel.json)**: Single Page Application rewrite rules so direct URLs and page refreshes (e.g. `/practice`, `/tests`, `/login`) never return 404 errors.
 3. **[seed-remote.ts](file:///apexprep-backend/scripts/seed-remote.ts)**: Cloud database seeder (`npm run db:seed:remote`) to safely populate your live Render database with the JEE Advanced syllabus, sample questions, and test accounts.
