@@ -1,0 +1,54 @@
+databases:
+  - name: apexprep-db
+    databaseName: apexprep
+    user: apexprep
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: apexprep-backend
+    runtime: node
+    plan: free
+    rootDir: apexprep-backend
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run db:migrate:prod
+    startCommand: npm run start:prod
+    healthCheckPath: /v1/health/live
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: apexprep-db
+          property: connectionString
+      - key: DATABASE_POOL_MAX
+        value: 10
+      - key: TRUST_PROXY_HOPS
+        value: 1
+      - key: REFRESH_COOKIE_SECURE
+        value: true
+      - key: REFRESH_COOKIE_SAMESITE
+        value: none
+      - key: REFRESH_TOKEN_IN_BODY
+        value: false
+      - key: REQUIRE_VERIFIED_EMAIL
+        value: false
+      - key: DEFAULT_TENANT_SLUG
+        value: dev-sandbox
+      - key: MAIL_PROVIDER
+        value: none
+      - key: AI_PROVIDER
+        value: none
+      - key: AI_FALLBACK_PROVIDER
+        value: none
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: APP_PUBLIC_URL
+        sync: false
