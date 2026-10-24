@@ -1,307 +1,249 @@
-ApexPrep — AI Home Tutor & Adaptive Learning Platform
+# ApexPrep — Project Structure
+
+**Project Name:** ApexPrep
+**Project Type:** AI Home Tutor + Adaptive Learning Platform
+**Frontend:** React, TypeScript, Vite, Tailwind CSS
+**Backend:** NestJS, TypeScript
+**Database:** PostgreSQL + pgvector
+**AI Provider:** Gemini (primary)
+
+---
+
+## 1. Project Overview
+
+ApexPrep is an AI-powered personal home tutor and adaptive learning platform. It helps students learn concepts, practise questions, identify weaknesses, receive personalised explanations, and improve their performance through an adaptive learning engine.
+
+The platform is designed to support school students from Class 1 onward, along with competitive exam preparation such as JEE, NEET, and Olympiads. However, the availability of a track does not mean its complete syllabus or question bank has already been populated.
+
+The core learning cycle is:
+
+**Learn → Practice → Detect Weakness → Explain → Practice Again → Increase Difficulty**
+
+## 2. High-Level Repository Structure
+
+The project is organised into two main applications:
+
+```text
+ApexPrep/
+├── apexprep-frontend/
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   ├── pages/            # Student and admin pages
+│   │   ├── lib/              # API clients and helper functions
+│   │   ├── hooks/            # React hooks and feature state
+│   │   ├── types/            # TypeScript and API types
+│   │   └── tests/            # Frontend tests
+│   └── package.json
+│
+├── apexprep-backend/
+│   ├── src/
+│   │   ├── auth/             # Authentication and password flows
+│   │   ├── users/            # User and profile functionality
+│   │   ├── syllabus/         # Tracks and syllabus operations
+│   │   ├── practice/         # Practice sessions and attempts
+│   │   ├── learning-ai/      # AI notes, tutor, generation, visuals
+│   │   ├── explanations/     # Explanation and grounding logic
+│   │   ├── ingestion/        # PDF processing and hierarchy detection
+│   │   ├── questions/        # Question-related operations
+│   │   ├── analytics/        # Student analytics and recommendations
+│   │   ├── mail/             # Email templates and delivery
+│   │   ├── database/         # Database schema and repositories
+│   │   └── common/           # Shared guards, errors and utilities
+│   ├── database/
+│   │   └── migrations/       # Database migrations
+│   ├── test/
+│   │   ├── unit/             # Unit tests
+│   │   └── e2e/              # End-to-end tests
+│   └── package.json
+│
+└── README.md
+```
 
-Project status: Core platform, adaptive practice, AI learning features, and automatic syllabus-ingestion workflow are implemented and tested. Final browser QA, admin Question Bank/Analytics completion, and production hardening remain.
+*Note: This is the logical high-level structure. Verify exact folder names and locations against the current repository.*
+
+## 3. Frontend Structure
+
+The frontend is built using React, TypeScript, Vite, and Tailwind CSS.
+
+### Main responsibilities
+
+* **components/** — Reusable UI components, forms, layouts, question renderers, and visual explanation components.
+* **pages/** — Login, registration, onboarding, dashboard, theory, practice, and admin screens.
+* **lib/** — HTTP/API helpers, formatting utilities, answer utilities, and admin/content API clients.
+* **hooks/** — Authentication, API fetching, and practice-session state management.
+* **types/** — TypeScript types for API requests, responses, and UI data.
+* **tests/** — UI and interaction tests.
 
-1. The Problem
+### Main student screens
+
+* Registration and login
+* Onboarding and track selection
+* Dashboard
+* Theory and learning content
+* Adaptive practice
+* AI tutor and explanations
+* AI-generated fresh practice
+* Visual explanations
+* Revision notes
 
-Students often study from fixed question banks and generic explanations. These systems do not always adapt to each learner's current understanding.
+### Main admin screens
+
+* Admin dashboard
+* Syllabus management
+* Content upload
+* Content processing
+* Content review
+* Suggested syllabus review
+* Question Bank
+* Platform Analytics
+
+Some admin features still require additional API integration or browser QA.
+
+## 4. Backend Structure
 
-ApexPrep aims to solve these problems:
+The backend is built using NestJS and TypeScript. It provides APIs, business logic, database access, authentication, AI integration, and adaptive practice.
 
-One-size-fits-all practice: Students at different ability levels may receive similar questions.
+### Main modules
 
-Hidden weaknesses: Scores do not always reveal the exact concepts a student struggles with.
+**auth/**
+Handles registration, login, token refresh, logout, password reset, and authentication-related workflows.
 
-Generic explanations: Help may not address the student's actual answer or misconception.
+**users/**
+Manages user profiles and user-related operations.
 
-Fragmented learning: Theory, practice, revision, doubt-solving, and visual learning are often separate.
+**syllabus/**
+Manages tracks, subjects, chapters, topics, sub-topics, and syllabus access rules.
 
-Manual content setup: Admins traditionally have to create Chapter → Topic → Sub-topic records before uploading useful content.
+**practice/**
+Manages practice sessions, question delivery, answer submissions, server-side grading, attempts, and session events.
 
-Content quality and safety: Extracted content must be reviewed before students can access it.
+**Adaptive Learning Engine**
+Updates learner ability, selects suitable question difficulty, handles promotion/demotion, probes, cold-start behaviour, probable-guess detection, and fallback when suitable questions are unavailable. This is core logic and should not be changed casually.
 
-Content expansion: New material must be added without inventing unsupported syllabus names.
+**learning-ai/**
+Contains AI short notes, AI tutor conversations, fresh question generation, visual explanations, and related grounding and answer-leakage checks.
 
-Production reliability: AI quota, real-world PDFs, email delivery, hosting, and operational controls need validation before launch.
+**explanations/**
+Handles explanations, retrieval, source grounding, and explanation-related workflows.
 
-2. The Solution
+**ingestion/**
+Processes uploaded PDFs, extracts and segments text, detects syllabus hierarchy, matches existing nodes, and creates pending syllabus suggestions.
 
-ApexPrep combines an AI Home Tutor with an adaptive learning engine.
+**questions/**
+Provides question-related APIs, validation, and question-generation integration.
 
-Its core learning loop is:
+**analytics/**
+Provides student summaries, learning analytics, and recommendations. Platform-level admin analytics still needs completion.
 
-Learn → Practice → Detect weakness → Explain → Practice again → Increase difficulty
+**mail/**
+Manages welcome emails, password-reset emails, templates, and email transport configuration.
 
-The platform uses learner performance to select practice difficulty and provide contextual help. Theory, revision notes, doubt follow-up, fresh question generation, and visual explanations are connected around the learner's current syllabus location.
+**database/**
+Contains database schema definitions, repositories, and database-related integration.
 
-Main differentiators
+**common/**
+Contains shared configuration, guards, validation, error handling, and reusable utilities.
 
-Adaptive practice rather than only a static question bank.
+## 5. Database Structure
 
-A learner model that updates from server-graded attempts.
+ApexPrep uses PostgreSQL as its primary relational database and pgvector for semantic retrieval.
 
-Contextual AI help based on the current topic, question, and student's answer.
+The database supports:
 
-Fresh AI-generated practice questions validated before being served.
+* Users and organisations
+* Authentication and refresh/reset tokens
+* Tracks and learner-track enrolment
+* Syllabus hierarchy
+* Theory and content blocks
+* Questions and solutions
+* Practice sessions and attempts
+* Learner ability and adaptive configuration
+* AI tutor conversations and messages
+* Revision notes
+* Generated questions
+* Visual explanations
+* Ingestion jobs and review tasks
+* Syllabus suggestions
+* Audit records
 
-Student-triggered visual explanations instead of forcing visuals on every question.
+Database schema changes are managed through migrations.
 
-Content-grounded notes and retrieval over published learning material.
+**Migration 0016** introduced the syllabus-suggestion persistence model and associations between suggestions and ingestion content blocks.
 
-PDF-based syllabus detection with human approval before creating missing syllabus nodes.
+Database rules:
 
-Separate syllabus approval and content approval gates.
+* Preserve tenant/organisation isolation.
+* Use transactions for multi-step operations.
+* Do not create syllabus nodes during ingestion before human approval.
+* Do not publish content without passing the normal content-review workflow.
+* Never commit passwords, API keys, or other secrets.
 
-Tenant-aware access control and audit logging.
+## 6. Main System Workflows
 
-3. Features Implemented
+### 6.1 Adaptive Practice
 
-Student and learning platform
+1. The student opens a topic.
+2. The backend creates or loads a practice session.
+3. The adaptive engine selects a suitable question.
+4. The student submits an answer.
+5. The backend grades the answer.
+6. The learner model is updated.
+7. The next question is selected based on the updated learner state.
 
-Registration, login, logout, token refresh, and password-reset flows.
+### 6.2 AI Tutor
 
-Role-based access and tenant isolation.
+1. The student requests a hint, explanation, simpler wording, or example.
+2. The backend retrieves relevant published theory and question context.
+3. Permitted attempt information is included when relevant.
+4. The AI generates a contextual response.
+5. The response is validated for grounding and answer leakage.
+6. The response is returned to the student.
 
-Backend-driven track selection and learner-track enrollment.
+### 6.3 Automatic Syllabus Detection
 
-Track → Subject → Chapter → Topic → Sub-topic syllabus model.
+1. The admin selects a Track and Subject.
+2. The admin uploads a PDF.
+3. The system extracts and segments the text.
+4. The system detects Chapter, Topic, and Sub-topic headings when evidence is available.
+5. Detected names are matched against the existing syllabus within the selected Track and Subject.
+6. Missing levels become pending syllabus suggestions.
+7. The admin reviews the evidence and approves, edits, or rejects the suggestion.
+8. Missing syllabus nodes are created only after approval.
+9. Content blocks are linked to the approved sub-topic.
+10. Content still passes through normal content approval and publishing.
+11. Published content becomes available to the existing learning and AI features.
 
-Published theory content.
+## 7. Syllabus Suggestion APIs
 
-Adaptive practice sessions and server-side answer grading.
+The following admin APIs support syllabus suggestion review:
 
-Learner ability updates, difficulty targeting, promotion/demotion rules, cold start, probes, probable-guess detection, parent-topic fallback, and question-reuse controls.
-
-AI short revision notes grounded in published theory.
-
-AI tutor conversations for hints, simpler explanations, why-an-answer-was-wrong guidance, step-by-step help, and examples.
-
-AI fresh-question generation at a difficulty selected by the adaptive engine.
-
-Structured visual explanations, including diagrams, graphs, step-by-step scenes, and supported animations.
-
-Semantic retrieval using embeddings over published content.
-
-Contextual explanations and reporting workflows.
-
-Admin and content operations
-
-Admin-only console and protected admin APIs.
-
-Manual syllabus authoring remains available.
-
-PDF content ingestion, extraction, segmentation, mapping, question/solution extraction, review, and publishing.
-
-Suggested Syllabus UI with evidence, confidence, and NEW, EXISTING, or UNRESOLVED states.
-
-Approve, Edit & Approve, and Reject actions for syllabus suggestions.
-
-Registration-success email and forgot-password/reset email infrastructure with SMTP support; local Mailpit delivery was verified.
-
-4. Automatic Syllabus Detection — Problem and Solution
-
-Problem
-
-Previously, ingestion mainly tried to map uploaded content to already-existing published sub-topics. If an admin uploaded material for a new topic, they had to manually create the Chapter, Topic, and Sub-topic before the content could be mapped.
-
-Solution
-
-Admin selects Track + Subject and uploads a PDF.
-
-The system extracts and segments the PDF text.
-
-It detects heading hierarchy from explicit numbering and other supported structural evidence.
-
-It matches detected names only inside the uploaded Track and Subject.
-
-Existing nodes are reused when the match is sufficiently strong.
-
-Missing levels become a pending syllabus suggestion, not actual syllabus nodes.
-
-The admin reviews the names, confidence, evidence, and linked blocks.
-
-Only after approval does the system create missing syllabus nodes.
-
-Content blocks are linked to the approved sub-topic.
-
-Content still goes through the normal content approval and publishing workflow.
-
-Safety rules
-
-The pipeline does not create syllabus nodes before admin approval.
-
-AI fallback is used only when deterministic detection is insufficient.
-
-AI cannot introduce arbitrary syllabus names; proposed names must be grounded in uploaded PDF text.
-
-Cross-track, cross-subject, and cross-tenant matching is prevented.
-
-Rejecting a suggestion does not create or modify syllabus nodes.
-
-Approving a syllabus suggestion does not automatically approve or publish its content.
-
-Syllabus suggestion APIs
-
+```http
 GET /v1/admin/ingestion/jobs/:id/suggestions
+```
 
+Returns the suggestions associated with an ingestion job.
+
+```http
 POST /v1/admin/ingestion/jobs/:id/suggestions/:suggestionId/approve
+```
 
+Approves a suggestion and creates or reuses the required syllabus nodes.
+
+```http
 POST /v1/admin/ingestion/jobs/:id/suggestions/:suggestionId/reject
+```
 
-Migration 0016 adds the suggestion and block-association tables/relations.
+Rejects a suggestion without creating syllabus nodes.
 
-5. Architecture
+These APIs require the appropriate content-management permission.
 
-Frontend: React, TypeScript, Vite, Tailwind CSS
+## 8. Security and Access Control
 
-Backend: NestJS, TypeScript
+ApexPrep uses role-based access control, tenant isolation, and audit logging.
 
-Database: PostgreSQL
+Important security rules:
 
-Vector retrieval: pgvector
-
-AI: Gemini as the current primary provider, with a provider abstraction for future fallback support
-
-Testing: Jest, backend integration/e2e tests, SQL assertions, frontend tests
-
-Local infrastructure: Docker-based PostgreSQL/Redis; Mailpit can be used for local email testing
-
-Read exact package versions and environment settings from the current project files. Never commit real API keys, database passwords, SMTP credentials, or seed passwords.
-
-6. Testing and Verification
-
-Latest reported results for the syllabus-detection implementation:
-
-Check
-
-Result
-
-Backend full test suite
-
-1197 / 1198 passed
-
-Hierarchy unit tests
-
-21 / 21 passed
-
-Syllabus-suggestion end-to-end tests
-
-24 / 24 passed
-
-SQL assertions
-
-183 / 183 passed
-
-Frontend tests
-
-30 / 30 passed
-
-Backend typecheck
-
-Clean
-
-Backend lint
-
-Clean
-
-Backend build
-
-Clean
-
-Frontend typecheck
-
-Clean
-
-Frontend build
-
-Clean
-
-The complete syllabus flow was reported as verified against the test database:
-
-Upload PDF → extract → detect hierarchy → create pending suggestion → fetch suggestions → approve → create/reuse nodes → map block → normal content approval → publish → student reads Theory.
-
-Known test failure
-
-One existing Windows ingestion test for the request-body size limit fails with a write ECANCELED error. It was reported as pre-existing and unrelated to the syllabus-detection work. Re-run the suite in the current environment before treating these figures as current.
-
-7. Current Limitations and Remaining Work
-
-Product and QA
-
-The new flow has primarily been tested with generated PDFs; real textbook layouts need broader testing.
-
-Scanned/image-only PDF OCR is not yet a complete capability.
-
-Real Gemini hierarchy-fallback behavior still needs a controlled live-provider smoke test.
-
-PDFs with insufficient hierarchy evidence may require admin editing.
-
-Option A selected: approved but empty syllabus nodes should ideally remain hidden from students until at least one content block is published.
-
-Admin Question Bank needs complete frontend connection/QA.
-
-Admin Platform Analytics needs platform-level backend aggregation and frontend wiring.
-
-Full browser QA is still required across admin and student flows.
-
-Infrastructure and launch readiness
-
-Production HTTPS, CORS, secrets management, monitoring, and deployment configuration must be finalized.
-
-Cloud object storage and a durable ingestion queue are not yet confirmed as production-ready.
-
-Production SMTP delivery must be tested with the chosen email provider/domain.
-
-Gemini quota and expected production usage need planning.
-
-Anthropic fallback live verification is deferred; do not treat it as verified until tested with a suitable workspace-scoped key.
-
-Adaptive-engine parameters need calibration using real learner data.
-
-Final staging and mobile/Android verification are required before release.
-
-Current assessment: Not yet production-ready. The core product is substantially implemented, but remaining QA and production-readiness items should be completed before public launch.
-
-8. Recommended Next Steps
-
-Fix the current local Forgot Password CORS/backend connection issue.
-
-Browser-test PDF upload, hierarchy detection, suggestion approval, content approval, publishing, and student Theory.
-
-Implement Option A: keep approved but empty syllabus nodes hidden from students until content is published.
-
-Finish the admin Question Bank connection.
-
-Build and connect Admin Platform Analytics.
-
-Run student/admin regression tests and verify role/tenant isolation.
-
-Test representative real textbook PDFs; document segmentation/OCR gaps.
-
-Verify AI hierarchy fallback against the configured provider.
-
-Finalize production HTTPS, secrets, CORS, storage, durable queue, monitoring, CI/CD, and email provider.
-
-Run final security, accessibility, performance, and content QA.
-
-Complete hosted staging verification before Android packaging/release.
-
-9. Important Product Decisions
-
-ApexPrep is an AI Home Tutor + Adaptive Learning Platform, not just a question bank.
-
-The adaptive engine is core infrastructure and should not be changed casually.
-
-Student-facing AI should remain grounded in published content and learner context.
-
-New syllabus hierarchy requires human approval.
-
-Syllabus approval and content approval are separate gates.
-
-The platform is designed to support Class 1 onward, but that does not mean the complete syllabus or question bank for every class already exists.
-
-Payment/subscription is future scope and is not currently a mandatory dependency.
-
-10. One-Line Summary
-
-ApexPrep is an AI-powered personal home tutor that adapts what each student learns and practices based on their individual performance.
+* Students must not access the admin console.
+* Backend admin APIs must enforce permissions independently of frontend routing.
+* Tenant-owned data must be scoped to the authenticated organisation.
+* Student APIs must not expose hidden
