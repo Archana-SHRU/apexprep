@@ -28,9 +28,10 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Local storage and test artifacts
-storage/
-*/storage/
+# Local storage and test artifacts (runtime uploads)
+/storage/
+/apexprep-backend/storage/
+!**/src/storage/**
 *.tsbuildinfo
 */.tsbuildinfo
 
