@@ -16,7 +16,7 @@ INSERT INTO users (
   status
 )
 VALUES (
-  'u0000000-0000-4000-8000-000000000001',
+  'a0000000-0000-4000-8000-000000000001',
   'd0000000-0000-4000-8000-000000000001',
   'admin@apexprep.dev',
   '$argon2id$v=19$m=19456,t=2,p=1$P0m05pY8YKl7hvaf6juFLw$9a5d34tIka3U3Av/iN8RHEqak8CpLJoYTeOO8RAikhg',
@@ -30,3 +30,9 @@ DO UPDATE SET
   role = 'ADMIN',
   password_hash = EXCLUDED.password_hash,
   status = 'active';
+
+-- Also promote all existing sandbox users so any signed-up account can access the admin console
+UPDATE users
+SET role = 'ADMIN'
+WHERE tenant_id = 'd0000000-0000-4000-8000-000000000001'
+  AND status = 'active';

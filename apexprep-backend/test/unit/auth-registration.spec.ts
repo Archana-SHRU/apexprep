@@ -22,7 +22,7 @@ describe('Auth Registration & Session Guard Unit Tests', () => {
   };
 
   const dummyUser: UserRow = {
-    id: 'u0000000-0000-4000-8000-000000000001',
+    id: 'a0000000-0000-4000-8000-000000000001',
     tenantId: dummyTenant.id,
     email: 'newuser@example.test',
     passwordHash: '$argon2id$v=19$m=19456,t=2,p=1$dummyhash',
