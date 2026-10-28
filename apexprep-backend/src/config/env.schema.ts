@@ -15,7 +15,7 @@ const aiProviderName = z.preprocess(
 const csv = z.string().transform((s) =>
   s
     .split(',')
-    .map((x) => x.trim())
+    .map((x) => x.trim().replace(/^['"]|['"]$/g, '').trim())
     .filter(Boolean),
 );
 /**

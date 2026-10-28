@@ -100,10 +100,10 @@ To allow the browser to securely send cookies between your Vercel frontend and R
 
 1. Go back to your [Render Dashboard](https://dashboard.render.com/).
 2. Click on your `apexprep-backend` Web Service $\rightarrow$ **Environment** tab.
-3. Update the following variables with your actual Vercel URL:
-   - `CORS_ORIGINS`: `https://<YOUR-VERCEL-DOMAIN>.vercel.app` *(exact URL with https://, no trailing slash)*
-   - `FRONTEND_URL`: `https://<YOUR-VERCEL-DOMAIN>.vercel.app`
-   - `APP_PUBLIC_URL`: `https://<YOUR-VERCEL-DOMAIN>.vercel.app`
+3. Update the following variables with your actual Vercel URL (e.g. `https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app`):
+   - `CORS_ORIGINS`: `https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app,https://apexprep.vercel.app` *(exact URLs with https://, comma-separated if multiple, no trailing slash)*
+   - `FRONTEND_URL`: `https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app`
+   - `APP_PUBLIC_URL`: `https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app`
 4. Click **Save Changes**. Render will automatically trigger a zero-downtime redeploy with the updated origins.
 
 ---

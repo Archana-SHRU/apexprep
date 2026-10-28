@@ -46,8 +46,8 @@ services:
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://apexprep.vercel.app
+        value: https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app,https://apexprep.vercel.app
       - key: FRONTEND_URL
-        value: https://apexprep.vercel.app
+        value: https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app
       - key: APP_PUBLIC_URL
-        value: https://apexprep.vercel.app
+        value: https://apexprep-dpdhyvhg1-archana-shrus-projects.vercel.app
