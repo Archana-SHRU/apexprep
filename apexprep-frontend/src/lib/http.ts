@@ -17,7 +17,8 @@
  * outside Vite by the verification harness, where it does not exist. One optional chain keeps the module
  * testable under plain Node instead of throwing on import.
  */
-const BASE_URL: string = (import.meta.env?.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ?? (typeof window !== 'undefined' ? '' : 'http://localhost:3000');
+const rawBase = (import.meta.env?.VITE_API_BASE_URL as string | undefined)?.trim();
+const BASE_URL: string = rawBase ? rawBase.replace(/\/$/, '') : (typeof window !== 'undefined' ? '' : 'http://localhost:3000');
 
 /** The backend's error body. */
 interface ErrorEnvelope {
@@ -212,14 +213,24 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   if (res.status === 204) return undefined as T;
   if (options.asBlob && res.ok) return (await res.blob()) as T;
 
+  const contentType = res.headers.get('content-type') ?? '';
   const text = await res.text();
+
+  if (contentType.includes('text/html') || text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+    throw new ApiError(
+      res.status,
+      'HTML_RESPONSE_NOT_API',
+      'The API endpoint returned HTML instead of JSON. Ensure VITE_API_BASE_URL is configured in your deployment to point to your backend API URL.',
+    );
+  }
+
   let parsed: unknown = null;
   if (text) {
     try {
       parsed = JSON.parse(text);
     } catch {
       // A non-JSON body from a proxy or a crash: surfaced as an error rather than guessed at.
-      if (!res.ok) throw new ApiError(res.status, 'UNEXPECTED_RESPONSE', text.slice(0, 200));
+      throw new ApiError(res.status, 'UNEXPECTED_RESPONSE', text.slice(0, 200));
     }
   }
 

@@ -65,7 +65,7 @@ git push origin main
    - Provision the PostgreSQL 16 database.
    - Link the internal database URL to the web service automatically.
    - Run `npm ci && npm run build`.
-   - Run `npm run db:migrate:prod` to apply all 19 database migrations automatically.
+   - Run `npm run db:migrate:prod` to apply all database migrations automatically (including migration `0022`, which provisions the active adaptive engine configuration, syllabus catalogue, sample questions, and mock tests).
    - Start the API with `npm run start:prod`.
 7. Once deployed, note your **Backend URL** from the Render dashboard (e.g., `https://apexprep-backend-xxxx.onrender.com`).
 
@@ -108,9 +108,12 @@ To allow the browser to securely send cookies between your Vercel frontend and R
 
 ---
 
-## Step 5: Seed Live Database with Syllabus & Initial Accounts
+## Step 5: (Optional) Seed Additional Content & Demo Accounts
 
-Now that your database and backend are live, initialize the database with the syllabus and demo accounts from your local terminal:
+> [!NOTE]
+> **Automatic Baseline Provisioning**: As of migration `0022_default_engine_config_and_content.sql`, Render automatically provisions the active adaptive engine configuration v1, track catalogue, syllabus, practice questions, and demo student during startup! You do **not** need to manually run this script for standard operation.
+
+If you ever wish to re-seed or override demo accounts from your local terminal:
 
 1. Open your [Render Dashboard](https://dashboard.render.com/) $\rightarrow$ click on `apexprep-db` (your PostgreSQL service).
 2. In the **Info** tab, locate **External Database URL** and copy it (it looks like `postgres://apexprep:<password>@dpg-xxxxxx-a.oregon-postgres.render.com/apexprep`).
